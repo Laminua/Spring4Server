@@ -1,10 +1,12 @@
-package com.example.springexercise3boot.models;
+package com.example.springexercise3boot.models.user;
 
+import com.example.springexercise3boot.models.test.Test;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -28,6 +30,8 @@ public class UserProfile {
     private String name;
     @Column(name = "email")
     private String email;
+    @OneToMany(mappedBy = "owner")
+    private List<Test> test;
 
     @Override
     public boolean equals(Object o) {

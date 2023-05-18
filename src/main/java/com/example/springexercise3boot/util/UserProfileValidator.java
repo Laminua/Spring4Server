@@ -1,7 +1,7 @@
 package com.example.springexercise3boot.util;
 
 import com.example.springexercise3boot.dto.UserProfileDTO;
-import com.example.springexercise3boot.models.UserProfile;
+import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

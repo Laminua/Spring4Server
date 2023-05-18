@@ -1,6 +1,6 @@
 package com.example.springexercise3boot.dto;
 
-import com.example.springexercise3boot.models.Role;
+import com.example.springexercise3boot.models.user.Role;
 import lombok.Getter;
 import lombok.Setter;
 

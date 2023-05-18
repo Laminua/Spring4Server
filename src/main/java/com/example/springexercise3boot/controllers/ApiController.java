@@ -1,7 +1,7 @@
 package com.example.springexercise3boot.controllers;
 
 import com.example.springexercise3boot.dto.UserProfileDTO;
-import com.example.springexercise3boot.models.UserProfile;
+import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.services.UserProfileService;
 import com.example.springexercise3boot.util.UserProfileValidator;
 import lombok.extern.slf4j.Slf4j;
