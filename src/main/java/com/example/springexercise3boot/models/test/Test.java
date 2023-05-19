@@ -22,7 +22,11 @@ public class Test {
     @Column(name = "test_description")
     private String description;
 
-    @OneToMany
+    @OneToOne
+    @JoinColumn(name = "id")
+    private AssignedTests assignedTests;
+
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private List<Question> questions;
 }

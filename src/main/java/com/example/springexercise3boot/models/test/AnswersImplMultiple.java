@@ -9,11 +9,13 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.springexercise3boot.models.test.Answers.MULTIPLE_TYPE;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName("multiple")
+@JsonTypeName(MULTIPLE_TYPE)
 public class AnswersImplMultiple implements Answers {
 
     private Map<Integer, String> answers;

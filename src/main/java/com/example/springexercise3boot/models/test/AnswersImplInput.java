@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.example.springexercise3boot.models.test.Answers.INPUT_TYPE;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName("input")
+@JsonTypeName(INPUT_TYPE)
 public class AnswersImplInput implements Answers {
 
     private String answer;

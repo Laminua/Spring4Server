@@ -3,23 +3,19 @@ package com.example.springexercise3boot.services;
 import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.repositories.UserProfilesRepository;
 import com.example.springexercise3boot.util.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class UserProfileService {
 
     private final UserProfilesRepository userProfilesRepository;
-
-    @Autowired
-    public UserProfileService(UserProfilesRepository userProfilesRepository) {
-        this.userProfilesRepository = userProfilesRepository;
-    }
 
     public List<UserProfile> findAll() {
         return userProfilesRepository.findAll();

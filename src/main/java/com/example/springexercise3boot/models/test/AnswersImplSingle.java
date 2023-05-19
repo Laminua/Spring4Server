@@ -8,11 +8,13 @@ import lombok.Setter;
 
 import java.util.Map;
 
+import static com.example.springexercise3boot.models.test.Answers.SINGLE_TYPE;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName("single")
+@JsonTypeName(SINGLE_TYPE)
 public class AnswersImplSingle implements Answers {
 
     private Map<Integer, String> answers;

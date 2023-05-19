@@ -4,8 +4,8 @@ import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.services.UserProfileService;
 import com.example.springexercise3boot.util.UserProfileValidator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,18 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/")
 @Slf4j
 public class ApiController {
     private final UserProfileService userProfileService;
     private final UserProfileValidator userProfileValidator;
-
-    @Autowired
-    private ApiController(UserProfileService userProfileService, UserProfileValidator userProfileValidator) {
-        this.userProfileService = userProfileService;
-        this.userProfileValidator = userProfileValidator;
-    }
 
     @GetMapping("users")
     public List<UserProfile> getUsers() {

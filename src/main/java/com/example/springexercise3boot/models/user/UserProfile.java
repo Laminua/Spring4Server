@@ -1,12 +1,11 @@
 package com.example.springexercise3boot.models.user;
 
-import com.example.springexercise3boot.models.test.Test;
+import com.example.springexercise3boot.models.test.AssignedTests;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -30,9 +29,9 @@ public class UserProfile {
     private String name;
     @Column(name = "email")
     private String email;
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "id")
-    private List<Test> test;
+    private AssignedTests assignedTests;
 
     @Override
     public boolean equals(Object o) {
