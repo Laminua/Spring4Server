@@ -1,15 +1,14 @@
 package com.example.springexercise3boot.models.test;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.List;
-import java.util.Map;
-
-@AllArgsConstructor
-public class Answers {
-
-    Map<Integer, String> answers;
-
-    List<Integer> rightAnswersKeys;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AnswersImplInput.class, name = "input"),
+        @JsonSubTypes.Type(value = AnswersImplMultiple.class, name = "multiple"),
+        @JsonSubTypes.Type(value = AnswersImplSingle.class, name = "single")
+})
+public interface Answers {
 
 }

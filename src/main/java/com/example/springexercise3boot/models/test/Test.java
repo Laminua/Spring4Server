@@ -1,10 +1,15 @@
 package com.example.springexercise3boot.models.test;
 
-import com.example.springexercise3boot.models.user.UserProfile;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "tests")
 public class Test {
@@ -17,10 +22,7 @@ public class Test {
     @Column(name = "test_description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserProfile owner;
-
-    @OneToMany(mappedBy = "owner")
+    @OneToMany
+    @JoinColumn(name = "id")
     private List<Question> questions;
 }

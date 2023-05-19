@@ -1,4 +1,4 @@
-create table user_profile
+create table if not exists user_profile
 (
     id       bigserial    not null primary key,
     username varchar(30) unique,

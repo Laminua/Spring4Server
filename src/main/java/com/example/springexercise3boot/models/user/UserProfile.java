@@ -30,7 +30,8 @@ public class UserProfile {
     private String name;
     @Column(name = "email")
     private String email;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany
+    @JoinColumn(name = "id")
     private List<Test> test;
 
     @Override
