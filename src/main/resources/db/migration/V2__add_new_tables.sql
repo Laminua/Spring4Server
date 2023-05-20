@@ -7,6 +7,7 @@ create table tests
 
 create table assigned_tests
 (
+    id bigserial not null primary key,
     user_id int not null references user_profile (id),
     test_id int not null references tests (id)
 );
