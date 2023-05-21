@@ -84,12 +84,12 @@ VALUES ('Какие химические элементы входят в сос
 }');
 
 insert into questions(question, question_type, test_id, answers)
-VALUES ('Домашнее животное, умеющее лаять', 'USER_INPUT', 1,
+VALUES ('Домашнее животное, умеющее лаять', 'USER_INPUT', 3,
         '{
           "answer_type": "input",
           "answer": "собака"
         }')
-     , ('Живёт под полом, боится кошек', 'USER_INPUT', 1, '{
+     , ('Живёт под полом, боится кошек', 'USER_INPUT', 3, '{
   "answer_type": "input",
   "answer": "мышь"
 }');

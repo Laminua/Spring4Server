@@ -17,14 +17,10 @@ public class Test {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "test_description")
     private String description;
-
-    @OneToOne
-    @JoinColumn(name = "id")
-    private AssignedTests assignedTests;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")

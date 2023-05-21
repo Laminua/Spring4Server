@@ -21,7 +21,7 @@ public class UserProfileService {
         return userProfilesRepository.findAll();
     }
 
-    public UserProfile findOne(int id) {
+    public UserProfile findOne(long id) {
         Optional<UserProfile> foundUserProfile = userProfilesRepository.findById(id);
         return foundUserProfile.orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
     }
@@ -42,13 +42,13 @@ public class UserProfileService {
     }
 
     @Transactional
-    public void update(int id, UserProfile updatedProfile) {
+    public void update(long id, UserProfile updatedProfile) {
         updatedProfile.setId(id);
         userProfilesRepository.save(updatedProfile);
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(long id) {
         userProfilesRepository.deleteById(id);
     }
 }

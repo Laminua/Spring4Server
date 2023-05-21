@@ -1,5 +1,6 @@
 package com.example.springexercise3boot.models.test;
 
+import com.example.springexercise3boot.models.user.UserProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +17,11 @@ public class AssignedTests {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @Column(name = "user_id")
-    private int user_id;
+    @OneToOne(fetch = FetchType.EAGER)
+    private UserProfile user;
 
-    @Column(name = "test_id")
-    private int test_id;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Test test;
 }
