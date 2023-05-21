@@ -18,20 +18,23 @@ public class UserProfile {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "email")
     private String email;
-    @OneToOne
-    @JoinColumn(name = "id")
-    private AssignedTests assignedTests;
+
 
     @Override
     public boolean equals(Object o) {
