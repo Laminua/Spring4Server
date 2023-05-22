@@ -25,4 +25,7 @@ public class Test {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private List<Question> questions;
+
+    @Column(name = "max_attempts")
+    private int max_attempts;
 }

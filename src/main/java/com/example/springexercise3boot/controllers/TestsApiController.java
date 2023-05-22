@@ -26,7 +26,7 @@ public class TestsApiController {
         log.info("API: requesting list of all tests");
 
         return testService.findAll().stream()
-                .map(this::convertToTestDTO)
+                .map(a -> convertToTestDTO(a, false))
                 .collect(Collectors.toList());
     }
 
@@ -35,14 +35,26 @@ public class TestsApiController {
         log.info("API: requesting list of tests assigned to user with id " + id);
 
         return testService.findAssignedTestsByUserId(id).stream()
-                .map(this::convertToTestDTO)
+                .map(a -> convertToTestDTO(a, false))
                 .collect(Collectors.toList());
     }
 
-    private TestDTO convertToTestDTO(Test test) {
+    @GetMapping("tests/single/{id}")
+    public TestDTO getTestById(@PathVariable long id) {
+
+        Test test = testService.findOne(id);
+
+        return convertToTestDTO(test, true);
+    }
+
+    private TestDTO convertToTestDTO(Test test, boolean inclQuestions) {
         TestDTO testDTO = new TestDTO();
         testDTO.setId(test.getId());
         testDTO.setDescription(test.getDescription());
+        // Запросит из базы связанные Questions только при вызове геттера
+        if (inclQuestions) {
+            testDTO.setQuestionList(test.getQuestions());
+        }
 
         return testDTO;
     }

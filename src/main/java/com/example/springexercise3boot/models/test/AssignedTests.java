@@ -21,6 +21,11 @@ public class AssignedTests {
     @OneToOne(fetch = FetchType.EAGER)
     private UserProfile user;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Test test;
+
+    private boolean finished;
+
+    private int attempts;
+
 }
