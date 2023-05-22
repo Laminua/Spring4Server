@@ -10,7 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = AnswersImplSingle.class, name = Answers.SINGLE_TYPE)
 })
 public interface Answers {
+
     String INPUT_TYPE = "input";
+
     String MULTIPLE_TYPE = "multiple";
+
     String SINGLE_TYPE = "single";
 }

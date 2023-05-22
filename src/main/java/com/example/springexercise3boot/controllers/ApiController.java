@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,10 +25,12 @@ public class ApiController {
     private final UserProfileValidator userProfileValidator;
 
     @GetMapping("users")
-    public List<UserProfile> getUsers() {
+    public List<UserProfileDTO> getUsers() {
         log.info("API: requesting list of UserProfiles");
 
-        return userProfileService.findAll();
+        return userProfileService.findAll().stream()
+                .map(this::converttoUserProfileDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(value = "users", consumes = "application/json", produces = "application/json")
@@ -52,7 +55,7 @@ public class ApiController {
     }
 
     @DeleteMapping("deleteUser")
-    public ResponseEntity<String> deleteUserById(@RequestParam("id") int id) {
+    public ResponseEntity<String> deleteUserById(@RequestParam("id") long id) {
         log.info("API: Attempt removing user from database, ID: " + id);
 
         if (userProfileService.findOne(id) != null) {
@@ -63,17 +66,21 @@ public class ApiController {
     }
 
     @GetMapping("users/{id}")
-    public UserProfile getUserProfileById(@PathVariable("id") int id) {
+    public UserProfileDTO getUserProfileById(@PathVariable("id") long id) {
         log.info("API: UserProfile with ID: " + id + " requested from DB");
 
-        return userProfileService.findOne(id);
+        UserProfile profile = userProfileService.findOne(id);
+
+        return converttoUserProfileDTO(profile);
     }
 
     @GetMapping("user/{username}")
-    public UserProfile getUserProfileByUsername(@PathVariable("username") String username) {
+    public UserProfileDTO getUserProfileByUsername(@PathVariable("username") String username) {
         log.info("API: UserProfile with username " + username + " requested from DB");
 
-        return userProfileService.findByUsername(username);
+        UserProfile profile = userProfileService.findByUsername(username);
+
+        return converttoUserProfileDTO(profile);
     }
 
     @PostMapping("updateUser")
@@ -104,5 +111,17 @@ public class ApiController {
         userProfile.setEmail(profileDTO.getEmail());
 
         return userProfile;
+    }
+
+    private UserProfileDTO converttoUserProfileDTO(UserProfile userProfile) {
+        UserProfileDTO userProfileDTO = new UserProfileDTO();
+        userProfileDTO.setId(userProfile.getId());
+        userProfileDTO.setUsername(userProfile.getUsername());
+        userProfileDTO.setPassword(userProfile.getPassword());
+        userProfileDTO.setName(userProfile.getName());
+        userProfileDTO.setRole(userProfile.getRole());
+        userProfileDTO.setEmail(userProfile.getEmail());
+
+        return userProfileDTO;
     }
 }
