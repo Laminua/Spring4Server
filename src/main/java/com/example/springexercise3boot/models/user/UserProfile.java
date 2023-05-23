@@ -1,12 +1,10 @@
 package com.example.springexercise3boot.models.user;
 
-import com.example.springexercise3boot.models.test.Test;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -15,23 +13,27 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_profile")
 public class UserProfile {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "email")
     private String email;
-    @OneToMany(mappedBy = "owner")
-    private List<Test> test;
 
     @Override
     public boolean equals(Object o) {

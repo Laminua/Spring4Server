@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserProfilesRepository extends JpaRepository<UserProfile, Integer> {
+public interface UserProfilesRepository extends JpaRepository<UserProfile, Long> {
     Optional<UserProfile> queryDistinctByUsername(String username);
 
     Optional<UserProfile> queryDistinctByEmail(String email);
