@@ -2,6 +2,7 @@ package com.example.springexercise3boot.controllers;
 
 import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.user.UserProfile;
+import com.example.springexercise3boot.services.MapperService;
 import com.example.springexercise3boot.services.UserProfileService;
 import com.example.springexercise3boot.util.UserProfileValidator;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,14 @@ import java.util.stream.Collectors;
 public class ApiController {
     private final UserProfileService userProfileService;
     private final UserProfileValidator userProfileValidator;
+    private final MapperService mapper;
 
     @GetMapping("users")
     public List<UserProfileDTO> getUsers() {
         log.info("API: requesting list of UserProfiles");
 
         return userProfileService.findAll().stream()
-                .map(this::converttoUserProfileDTO)
+                .map(mapper::converttoUserProfileDTO)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +50,7 @@ public class ApiController {
             throw new BindException(bindingResult);
         }
 
-        userProfileService.save(convertToUserProfile(profileDTO));
+        userProfileService.save(mapper.convertToUserProfile(profileDTO));
         log.info("API: User successfully created");
 
         return new ResponseEntity<>("API: User successfully created", HttpStatus.CREATED);
@@ -71,7 +73,7 @@ public class ApiController {
 
         UserProfile profile = userProfileService.findOne(id);
 
-        return converttoUserProfileDTO(profile);
+        return mapper.converttoUserProfileDTO(profile);
     }
 
     @GetMapping("user/{username}")
@@ -80,7 +82,7 @@ public class ApiController {
 
         UserProfile profile = userProfileService.findByUsername(username);
 
-        return converttoUserProfileDTO(profile);
+        return mapper.converttoUserProfileDTO(profile);
     }
 
     @PostMapping("updateUser")
@@ -96,32 +98,9 @@ public class ApiController {
         }
 
         log.info("API: User successfully updated");
-        userProfileService.update(profileDTO.getId(), convertToUserProfile(profileDTO));
+        userProfileService.update(profileDTO.getId(), mapper.convertToUserProfile(profileDTO));
 
         return new ResponseEntity<>("API: User successfully updated", HttpStatus.OK);
     }
 
-    private UserProfile convertToUserProfile(UserProfileDTO profileDTO) {
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId(profileDTO.getId());
-        userProfile.setUsername(profileDTO.getUsername());
-        userProfile.setPassword(profileDTO.getPassword());
-        userProfile.setRole(profileDTO.getRole());
-        userProfile.setName(profileDTO.getName());
-        userProfile.setEmail(profileDTO.getEmail());
-
-        return userProfile;
-    }
-
-    private UserProfileDTO converttoUserProfileDTO(UserProfile userProfile) {
-        UserProfileDTO userProfileDTO = new UserProfileDTO();
-        userProfileDTO.setId(userProfile.getId());
-        userProfileDTO.setUsername(userProfile.getUsername());
-        userProfileDTO.setPassword(userProfile.getPassword());
-        userProfileDTO.setName(userProfile.getName());
-        userProfileDTO.setRole(userProfile.getRole());
-        userProfileDTO.setEmail(userProfile.getEmail());
-
-        return userProfileDTO;
-    }
 }
