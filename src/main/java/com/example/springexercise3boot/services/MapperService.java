@@ -22,7 +22,7 @@ public class MapperService {
         return userProfile;
     }
 
-    public UserProfileDTO converttoUserProfileDTO(UserProfile userProfile) {
+    public UserProfileDTO convertToUserProfileDTO(UserProfile userProfile) {
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setId(userProfile.getId());
         userProfileDTO.setUsername(userProfile.getUsername());

@@ -31,7 +31,7 @@ public class ApiController {
         log.info("API: requesting list of UserProfiles");
 
         return userProfileService.findAll().stream()
-                .map(mapper::converttoUserProfileDTO)
+                .map(mapper::convertToUserProfileDTO)
                 .collect(Collectors.toList());
     }
 
@@ -73,7 +73,7 @@ public class ApiController {
 
         UserProfile profile = userProfileService.findOne(id);
 
-        return mapper.converttoUserProfileDTO(profile);
+        return mapper.convertToUserProfileDTO(profile);
     }
 
     @GetMapping("user/{username}")
@@ -82,7 +82,7 @@ public class ApiController {
 
         UserProfile profile = userProfileService.findByUsername(username);
 
-        return mapper.converttoUserProfileDTO(profile);
+        return mapper.convertToUserProfileDTO(profile);
     }
 
     @PostMapping("updateUser")
