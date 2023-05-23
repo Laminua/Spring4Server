@@ -1,6 +1,7 @@
 package com.example.springexercise3boot.controllers;
 
 import com.example.springexercise3boot.dto.TestDescriptionDTO;
+import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.services.TestService;
 import com.example.springexercise3boot.services.MapperService;
@@ -43,11 +44,12 @@ public class TestsApiController {
     }
 
     @GetMapping("tests/single/{id}")
-    public TestDescriptionDTO getTestById(@PathVariable long id) {
+    public TestWithQuestionsDTO getTestById(@PathVariable long id) {
+        log.info("API: requesting test with questions by test id " + id);
 
         Test test = testService.findOne(id);
 
-        return mapper.convertToTestDescriptionDTO(test);
+        return mapper.convertToTestWithQuestionsDTO(test);
     }
 
 

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface AssignedTestsRepository extends JpaRepository<AssignedTests, Long> {
 
-    @Query("select at.test from AssignedTests at join fetch at.test.questions where at.user.id = :id")
+    @Query("select at.test from AssignedTests at where at.user.id = :id")
     List<Test> getAssignedTestsByUserId(long id);
 }

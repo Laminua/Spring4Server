@@ -28,7 +28,7 @@ public class UserProfileService {
 
     public UserProfile findByUsername(String username) {
         Optional<UserProfile> foundUserProfile = userProfilesRepository.queryDistinctByUsername(username);
-        return foundUserProfile.orElse(null);
+        return foundUserProfile.orElseThrow(() -> new UserNotFoundException("No user with username " + username));
     }
 
     public UserProfile findByEmail(String email) {

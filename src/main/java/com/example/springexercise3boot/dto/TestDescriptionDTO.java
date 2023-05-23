@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class TestDescriptionDTO {
 
-    long id;
+    private long id;
 
-    String description;
+    private String description;
 }

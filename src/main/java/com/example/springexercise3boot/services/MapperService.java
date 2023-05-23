@@ -1,6 +1,7 @@
 package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.TestDescriptionDTO;
+import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
 import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.models.user.UserProfile;
@@ -39,5 +40,15 @@ public class MapperService {
         testDescriptionDTO.setDescription(test.getDescription());
 
         return testDescriptionDTO;
+    }
+
+    public TestWithQuestionsDTO convertToTestWithQuestionsDTO(Test test) {
+        TestWithQuestionsDTO dto = new TestWithQuestionsDTO();
+        dto.setId(test.getId());
+        dto.setDescription(test.getDescription());
+        dto.setQuestions(test.getQuestions());
+        dto.setMax_attempts(test.getMax_attempts());
+
+        return dto;
     }
 }
