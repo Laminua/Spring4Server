@@ -22,4 +22,8 @@ public class AnswersImplMultiple implements Answers {
 
     private List<Integer> rightAnswersKeys;
 
+    @Override
+    public String toString() {
+        return "" + answers + "";
+    }
 }

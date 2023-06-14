@@ -1,11 +1,13 @@
 package com.example.springexercise3boot.services;
 
-import com.example.springexercise3boot.dto.TestDescriptionDTO;
-import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
-import com.example.springexercise3boot.dto.UserProfileDTO;
+import com.example.springexercise3boot.dto.*;
+import com.example.springexercise3boot.models.test.AssignedTests;
+import com.example.springexercise3boot.models.test.Question;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.models.user.UserProfile;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MapperService {
@@ -48,6 +50,26 @@ public class MapperService {
         dto.setDescription(test.getDescription());
         dto.setQuestions(test.getQuestions());
         dto.setMax_attempts(test.getMax_attempts());
+
+        return dto;
+    }
+
+    public AssignedTestsDTO convertToAssignedTestsDTO(AssignedTests assignedTests) {
+        AssignedTestsDTO dto = new AssignedTestsDTO();
+        dto.setId(assignedTests.getId());
+        dto.setTest(assignedTests.getTest());
+        dto.setFinished(assignedTests.isFinished());
+        dto.setAttempts(assignedTests.getAttempts());
+
+        return dto;
+    }
+
+    public QuestionWithAnswersDTO convertToQuestionsDTO(Question question, List<String> answers) {
+        QuestionWithAnswersDTO dto = new QuestionWithAnswersDTO();
+        dto.setId(question.getId());
+        dto.setQuestion(question.getQuestion());
+        dto.setQuestionType(question.getQuestionType());
+        dto.setAnswers(answers);
 
         return dto;
     }

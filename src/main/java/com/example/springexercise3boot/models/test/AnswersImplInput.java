@@ -17,4 +17,8 @@ public class AnswersImplInput implements Answers {
 
     private String answer;
 
+    @Override
+    public String toString() {
+        return "";
+    }
 }

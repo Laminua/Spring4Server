@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface TestsRepository extends JpaRepository<Test, Long> {
 
-    @Query("select t from Test t join fetch t.questions where t.id = :id")
+    @Query("select t from Test t join fetch t.questions where t.id=:id")
     Optional<Test> findById(long id);
 }

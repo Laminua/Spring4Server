@@ -21,4 +21,8 @@ public class AnswersImplSingle implements Answers {
 
     private int rightAnswerKey;
 
+    @Override
+    public String toString() {
+        return "" + answers + "";
+    }
 }
