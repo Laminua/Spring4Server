@@ -1,17 +1,16 @@
 package com.example.springexercise3boot.controllers;
 
-import com.example.springexercise3boot.dto.*;
-import com.example.springexercise3boot.models.test.Question;
+import com.example.springexercise3boot.dto.AssignedTestsDTO;
+import com.example.springexercise3boot.dto.QuestionWithAnswersDTO;
+import com.example.springexercise3boot.dto.TestDescriptionDTO;
+import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.services.AnswersService;
 import com.example.springexercise3boot.services.MapperService;
 import com.example.springexercise3boot.services.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +59,7 @@ public class TestsApiController {
         log.info("API: requesting questions with answers for test with id: " + id);
 
         return testService.findQuestionsByTestId(id).stream()
-                .map(a -> mapper.convertToQuestionsDTO(a, answersService.getAnswers(a.getId())))
+                .map(a -> mapper.convertToQuestionWithAnswersDTO(a, mapper.convertToAnswersDTO(answersService.getAnswers(a.getId()))))
                 .collect(Collectors.toList());
     }
 }

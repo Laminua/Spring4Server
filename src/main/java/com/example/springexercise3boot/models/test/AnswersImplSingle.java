@@ -20,9 +20,4 @@ public class AnswersImplSingle implements Answers {
     private Map<Integer, String> answers;
 
     private int rightAnswerKey;
-
-    @Override
-    public String toString() {
-        return "" + answers + "";
-    }
 }

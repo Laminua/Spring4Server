@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.example.springexercise3boot.models.test.Answers.INPUT_TYPE;
 
 @Getter
@@ -18,7 +21,7 @@ public class AnswersImplInput implements Answers {
     private String answer;
 
     @Override
-    public String toString() {
-        return "";
+    public Map<Integer, String> getAnswers() {
+        return new HashMap<>();
     }
 }

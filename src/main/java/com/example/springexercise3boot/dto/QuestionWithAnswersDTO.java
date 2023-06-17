@@ -4,7 +4,7 @@ import com.example.springexercise3boot.models.test.QuestionType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -15,6 +15,6 @@ public class QuestionWithAnswersDTO {
 
     private QuestionType questionType;
 
-    private List<String> answers;
+    private Map<Integer, String> answers;
 
 }

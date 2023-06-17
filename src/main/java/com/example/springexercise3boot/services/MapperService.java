@@ -1,13 +1,12 @@
 package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.*;
+import com.example.springexercise3boot.models.test.Answers;
 import com.example.springexercise3boot.models.test.AssignedTests;
 import com.example.springexercise3boot.models.test.Question;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.models.user.UserProfile;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MapperService {
@@ -64,12 +63,19 @@ public class MapperService {
         return dto;
     }
 
-    public QuestionWithAnswersDTO convertToQuestionsDTO(Question question, List<String> answers) {
+    public QuestionWithAnswersDTO convertToQuestionWithAnswersDTO(Question question, AnswersDTO answers) {
         QuestionWithAnswersDTO dto = new QuestionWithAnswersDTO();
         dto.setId(question.getId());
         dto.setQuestion(question.getQuestion());
         dto.setQuestionType(question.getQuestionType());
-        dto.setAnswers(answers);
+        dto.setAnswers(answers.getAnswers());
+
+        return dto;
+    }
+
+    public AnswersDTO convertToAnswersDTO(Answers answers) {
+        AnswersDTO dto = new AnswersDTO();
+        dto.setAnswers(answers.getAnswers());
 
         return dto;
     }

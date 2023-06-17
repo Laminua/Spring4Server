@@ -1,6 +1,5 @@
 package com.example.springexercise3boot.services;
 
-import com.example.springexercise3boot.models.test.Answers;
 import com.example.springexercise3boot.models.test.AssignedTests;
 import com.example.springexercise3boot.models.test.Question;
 import com.example.springexercise3boot.models.test.Test;
@@ -43,10 +42,5 @@ public class TestService {
     public List<Question> findQuestionsByTestId(long id) {
 
         return questionsRepository.findAllByTestId(id);
-    }
-
-    public List<Answers> findAnswersByQuestionId(long id) {
-
-        return questionsRepository.findAllByQuestionId(id);
     }
 }

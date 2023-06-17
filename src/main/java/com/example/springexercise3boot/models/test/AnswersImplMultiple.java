@@ -21,9 +21,4 @@ public class AnswersImplMultiple implements Answers {
     private Map<Integer, String> answers;
 
     private List<Integer> rightAnswersKeys;
-
-    @Override
-    public String toString() {
-        return "" + answers + "";
-    }
 }

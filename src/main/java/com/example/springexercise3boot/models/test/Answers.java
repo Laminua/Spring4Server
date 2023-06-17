@@ -3,6 +3,8 @@ package com.example.springexercise3boot.models.test;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Map;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "answer_type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AnswersImplInput.class, name = Answers.INPUT_TYPE),
@@ -16,4 +18,6 @@ public interface Answers {
     String MULTIPLE_TYPE = "multiple";
 
     String SINGLE_TYPE = "single";
+
+    Map<Integer, String> getAnswers();
 }
