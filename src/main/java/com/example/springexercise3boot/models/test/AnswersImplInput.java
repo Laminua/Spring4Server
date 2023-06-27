@@ -9,13 +9,11 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.springexercise3boot.models.test.Answers.INPUT_TYPE;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName(INPUT_TYPE)
+@JsonTypeName(QuestionType.USER_INPUT_CONST)
 public class AnswersImplInput implements Answers {
 
     private String answer;

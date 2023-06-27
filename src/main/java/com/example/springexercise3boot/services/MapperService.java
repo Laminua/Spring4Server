@@ -1,10 +1,7 @@
 package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.*;
-import com.example.springexercise3boot.models.test.Answers;
-import com.example.springexercise3boot.models.test.AssignedTests;
-import com.example.springexercise3boot.models.test.Question;
-import com.example.springexercise3boot.models.test.Test;
+import com.example.springexercise3boot.models.test.*;
 import com.example.springexercise3boot.models.user.UserProfile;
 import org.springframework.stereotype.Service;
 

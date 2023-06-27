@@ -1,15 +1,14 @@
 package com.example.springexercise3boot.controllers;
 
-import com.example.springexercise3boot.dto.AssignedTestsDTO;
-import com.example.springexercise3boot.dto.QuestionWithAnswersDTO;
-import com.example.springexercise3boot.dto.TestDescriptionDTO;
-import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
+import com.example.springexercise3boot.dto.*;
 import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.services.AnswersService;
 import com.example.springexercise3boot.services.MapperService;
 import com.example.springexercise3boot.services.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,5 +60,14 @@ public class TestsApiController {
         return testService.findQuestionsByTestId(id).stream()
                 .map(a -> mapper.convertToQuestionWithAnswersDTO(a, mapper.convertToAnswersDTO(answersService.getAnswers(a.getId()))))
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping("tests/questions/{id}")
+    public ResponseEntity<String> postUserResponseOnTest(@RequestBody UserAnswerDTO[] response,
+                                                         @PathVariable String id) {
+
+        String checked = testService.checkTest(id, response);
+
+        return new ResponseEntity<>(checked, HttpStatus.OK);
     }
 }

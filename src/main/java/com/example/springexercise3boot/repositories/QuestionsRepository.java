@@ -14,6 +14,8 @@ public interface QuestionsRepository extends JpaRepository<Question, Long> {
     @Query("select t.questions from Test t where t.id=:id")
     List<Question> findAllByTestId(long id);
 
+    Question getQuestionById(long id);
+
     @Query("select q.answers from Question q where q.id=:id")
     Answers findAllByQuestionId(long id);
 }

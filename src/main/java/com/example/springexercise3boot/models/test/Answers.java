@@ -5,19 +5,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.Map;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "answer_type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "questionType")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AnswersImplInput.class, name = Answers.INPUT_TYPE),
-        @JsonSubTypes.Type(value = AnswersImplMultiple.class, name = Answers.MULTIPLE_TYPE),
-        @JsonSubTypes.Type(value = AnswersImplSingle.class, name = Answers.SINGLE_TYPE)
+        @JsonSubTypes.Type(value = AnswersImplInput.class, name = QuestionType.USER_INPUT_CONST),
+        @JsonSubTypes.Type(value = AnswersImplMultiple.class, name = QuestionType.MANY_ANSWERS_CONST),
+        @JsonSubTypes.Type(value = AnswersImplSingle.class, name = QuestionType.SINGLE_ANSWER_CONST)
 })
 public interface Answers {
-
-    String INPUT_TYPE = "input";
-
-    String MULTIPLE_TYPE = "multiple";
-
-    String SINGLE_TYPE = "single";
 
     Map<Integer, String> getAnswers();
 }
