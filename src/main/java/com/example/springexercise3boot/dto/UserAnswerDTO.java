@@ -6,6 +6,7 @@ import com.example.springexercise3boot.models.test.UserAnswerMultipleType;
 import com.example.springexercise3boot.models.test.UserAnswerSingleType;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +20,12 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@AllArgsConstructor
 public abstract class UserAnswerDTO {
+
+    private final long userId;
+
+    private final long questionId;
+
+    private final QuestionType questionType;
 }

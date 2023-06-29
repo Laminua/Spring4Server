@@ -12,4 +12,6 @@ public interface AssignedTestsRepository extends JpaRepository<AssignedTests, Lo
 
     @Query("select at from AssignedTests at join fetch at.test where at.user.id = :id")
     List<AssignedTests> getAssignedTestsByUserId(long id);
+
+    AssignedTests getAssignedTestsByUserIdAndTestId(long userId, long testId);
 }

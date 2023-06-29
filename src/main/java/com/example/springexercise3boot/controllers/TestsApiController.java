@@ -2,9 +2,7 @@ package com.example.springexercise3boot.controllers;
 
 import com.example.springexercise3boot.dto.*;
 import com.example.springexercise3boot.models.test.Test;
-import com.example.springexercise3boot.services.AnswersService;
-import com.example.springexercise3boot.services.MapperService;
-import com.example.springexercise3boot.services.TestService;
+import com.example.springexercise3boot.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,9 +20,13 @@ public class TestsApiController {
 
     private final TestService testService;
 
+    private final CheckTestService checkTestService;
+
     private final MapperService mapper;
 
     private final AnswersService answersService;
+
+    private final AssignedTestsService assignedTestsService;
 
     @GetMapping("tests")
     public List<TestDescriptionDTO> getAllTests() {
@@ -39,7 +41,7 @@ public class TestsApiController {
     public List<AssignedTestsDTO> getTestsForUser(@PathVariable long id) {
         log.info("API: requesting list of tests assigned to user with id " + id);
 
-        return testService.findAssignedTestsByUserId(id).stream()
+        return assignedTestsService.findAssignedTestsByUserId(id).stream()
                 .map(mapper::convertToAssignedTestsDTO)
                 .collect(Collectors.toList());
     }
@@ -66,7 +68,7 @@ public class TestsApiController {
     public ResponseEntity<String> postUserResponseOnTest(@RequestBody UserAnswerDTO[] response,
                                                          @PathVariable String id) {
 
-        String checked = testService.checkTest(id, response);
+        String checked = checkTestService.checkTest(id, response);
 
         return new ResponseEntity<>(checked, HttpStatus.OK);
     }

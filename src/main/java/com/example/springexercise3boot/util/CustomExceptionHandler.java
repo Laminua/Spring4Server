@@ -41,6 +41,13 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(QuestionNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleQuestionNotFoundException(QuestionNotFoundException ex) {
+        errors = new ArrayList<>();
+        errors.add(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
     private Map<String, List<String>> getErrorsMap(List<String> errors) {
         Map<String, List<String>> errorResponse = new HashMap<>();
         errorResponse.put("errors", errors);
