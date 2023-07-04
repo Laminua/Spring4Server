@@ -50,12 +50,12 @@ public class MapperService {
         return dto;
     }
 
-    public AssignedTestsDTO convertToAssignedTestsDTO(AssignedTests assignedTests) {
+    public AssignedTestsDTO convertToAssignedTestsDTO(AssignedTest assignedTest) {
         AssignedTestsDTO dto = new AssignedTestsDTO();
-        dto.setId(assignedTests.getId());
-        dto.setTest(assignedTests.getTest());
-        dto.setFinished(assignedTests.isFinished());
-        dto.setAttempts(assignedTests.getAttempts());
+        dto.setId(assignedTest.getId());
+        dto.setTest(assignedTest.getTest());
+        dto.setFinished(assignedTest.isFinished());
+        dto.setAttempts(assignedTest.getAttempts());
 
         return dto;
     }
@@ -71,9 +71,7 @@ public class MapperService {
     }
 
     public AnswersDTO convertToAnswersDTO(Answers answers) {
-        AnswersDTO dto = new AnswersDTO();
-        dto.setAnswers(answers.getAnswers());
 
-        return dto;
+        return new AnswersDTO(answers.getAnswers());
     }
 }

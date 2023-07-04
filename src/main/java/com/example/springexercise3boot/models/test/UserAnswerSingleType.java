@@ -1,19 +1,16 @@
 package com.example.springexercise3boot.models.test;
 
-import com.example.springexercise3boot.dto.UserAnswerDTO;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@JsonTypeName(QuestionType.SINGLE_ANSWER_CONST)
-public class UserAnswerSingleType extends UserAnswerDTO {
+public class UserAnswerSingleType extends UserAnswer {
 
-    private int answers;
+    private int answer;
 
-    public UserAnswerSingleType(long userId, long questionId, QuestionType questionType, int answers) {
-        super(userId, questionId, questionType);
-        this.answers = answers;
+    public UserAnswerSingleType(long questionId, int answer) {
+        super(questionId, QuestionType.SINGLE_ANSWER);
+        this.answer = answer;
     }
 }

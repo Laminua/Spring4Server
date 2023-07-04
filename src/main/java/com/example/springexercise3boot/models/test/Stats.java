@@ -1,14 +1,17 @@
 package com.example.springexercise3boot.models.test;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Stats {
-
-    long userId;
-
-    long testId;
-
-    boolean isFinished;
 
     int rightAnswersCount;
 
-    int usedAttempts;
+    int gainedScore;
 }

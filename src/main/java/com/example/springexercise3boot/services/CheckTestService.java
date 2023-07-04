@@ -2,105 +2,132 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.UserAnswerDTO;
 import com.example.springexercise3boot.models.test.*;
-import com.example.springexercise3boot.repositories.AssignedTestsRepository;
-import com.example.springexercise3boot.repositories.TestsRepository;
+import com.example.springexercise3boot.util.NoAttemptsLeftException;
 import com.example.springexercise3boot.util.QuestionNotFoundException;
-import com.example.springexercise3boot.util.TestNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CheckTestService {
 
-    private final TestsRepository testsRepository;
+    private final AssignedTestService assignedTestService;
 
-    private final AssignedTestsRepository assignedTestsRepository;
+    Map<Long, Question> questionsMap;
 
-    private final AssignedTestsService assignedTestsService;
+    public String checkTest(long testId, UserAnswerDTO dto) {
 
-    public String checkTest(String id, UserAnswerDTO[] response) {
+        long userId = dto.getUserId();
 
-        long testId = Long.parseLong(id);
+        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
 
-        Test test = testsRepository.findById(testId)
-                .orElseThrow(() -> new TestNotFoundException("No test found by given id"));
+        Test test = assignedTest.getTest();
 
-        List<Question> questions = test.getQuestions();
+        int testMaxAttempts = test.getMax_attempts(); // 0 means unlimited
 
-        long userId = Arrays.stream(response).findFirst().map(UserAnswerDTO::getUserId).orElse(0L);
+        int usedAttempts = assignedTest.getAttempts();
 
-        for (UserAnswerDTO userAnswerDTO : response) {
-            if (userAnswerDTO.getClass().equals(UserAnswerInputType.class)) {
+        if (testMaxAttempts > 0 && testMaxAttempts == usedAttempts) {
+            throw new NoAttemptsLeftException("Исчерпано максимальное количество попыток прохождения теста");
+        }
 
-                UserAnswerInputType userAnswerInputType = (UserAnswerInputType) userAnswerDTO;
+        questionsMap = test.getQuestions().stream()
+                .collect(Collectors.toMap(Question::getId, Function.identity()));
 
-                AnswersImplInput rightAnswer = (AnswersImplInput) questions.stream()
-                        .filter(q -> userAnswerInputType.getQuestionId() == q.getId())
-                        .findFirst()
-                        .orElseThrow(() -> new QuestionNotFoundException("No question found by given id")).getAnswers();
+        List<UserAnswer> userAnswers = dto.getUserAnswers();
 
-                checkUserInputType(rightAnswer, userAnswerInputType.getAnswers());
+        long questionId;
 
-            } else if (userAnswerDTO.getClass().equals(UserAnswerMultipleType.class)) {
+        for (UserAnswer userAnswer : userAnswers) {
 
-                UserAnswerMultipleType userAnswerMultipleType = (UserAnswerMultipleType) userAnswerDTO;
+            questionId = validateQuestionId(userAnswer.getQuestionId());
 
-                AnswersImplMultiple rightAnswer = (AnswersImplMultiple) questions.stream()
-                        .filter(q -> userAnswerMultipleType.getQuestionId() == q.getId())
-                        .findAny()
-                        .orElseThrow(() -> new QuestionNotFoundException("No question found by given id")).getAnswers();
+            switch (userAnswer.getQuestionType()) {
 
-                checkManyAnswersType(rightAnswer, userAnswerMultipleType.getAnswers());
+                case SINGLE_ANSWER:
+                    checkSingleAnswerTypeQuestion(questionId, userAnswer);
+                    break;
 
-            } else if (userAnswerDTO.getClass().equals(UserAnswerSingleType.class)) {
+                case MANY_ANSWERS:
+                    checkManyAnswersTypeQuestion(questionId, userAnswer);
+                    break;
 
-                UserAnswerSingleType userAnswerSingleType = (UserAnswerSingleType) userAnswerDTO;
-
-                AnswersImplSingle rightAnswer = (AnswersImplSingle) questions.stream()
-                        .filter(q -> userAnswerSingleType.getQuestionId() == q.getId())
-                        .findAny()
-                        .orElseThrow(() -> new QuestionNotFoundException("No question found by given id")).getAnswers();
-
-                checkSingleAnswerType(rightAnswer, userAnswerSingleType.getAnswers());
+                case USER_INPUT:
+                    checkUserInputTypeQuestion(questionId, userAnswer);
+                    break;
             }
         }
 
-        AssignedTests assignedTests = assignedTestsRepository.getAssignedTestsByUserIdAndTestId(userId, testId);
-        assignedTests.setFinished(true);
-        assignedTests.setAttempts(assignedTests.getAttempts() + 1);
-        assignedTestsService.update(assignedTests);
 
-        return "Тест номер " + testId + " обработан";
+        // ToDo for statistics
+        assignedTest.setFinished(true);
+        assignedTest.setAttempts(assignedTest.getAttempts() + 1);
+        assignedTestService.update(assignedTest);
+
+        return "Тест номер " + testId + " для пользователя с id " + userId + " успешно обработан";
     }
 
-    private boolean checkSingleAnswerType(AnswersImplSingle answersImplSingle, int userAnswer) {
+    private boolean checkSingleAnswerTypeQuestion(long questionId,
+                                                  UserAnswer userAnswer) {
+
+        UserAnswerSingleType userAnswerSingleType = (UserAnswerSingleType) userAnswer;
+
+        AnswersImplSingle answersImplSingle = (AnswersImplSingle) questionsMap.get(questionId).getAnswers();
 
         int rightAnswerKey = answersImplSingle.getRightAnswerKey();
 
-        System.out.println("Right answer: " + rightAnswerKey + ", user answer: " + userAnswer
-                + ", is right answered? - " + (rightAnswerKey == userAnswer)); // for testing
-        return rightAnswerKey == userAnswer;
+        int userAnswerToCheck = userAnswerSingleType.getAnswer();
+
+        System.out.println("Right answer: " + rightAnswerKey + ", user answer: " + userAnswerToCheck
+                + ", is right answered? - " + (rightAnswerKey == userAnswerToCheck)); // for testing
+
+        return rightAnswerKey == userAnswerToCheck;
     }
 
-    private boolean checkManyAnswersType(AnswersImplMultiple answersImplMultiple, List<Integer> userAnswer) {
+    private boolean checkManyAnswersTypeQuestion(long questionId,
+                                                 UserAnswer userAnswer) {
 
-        List<Integer> rightAnswersKeys = answersImplMultiple.getRightAnswersKeys();
+        UserAnswerMultipleType userAnswerMultipleType = (UserAnswerMultipleType) userAnswer;
 
-        System.out.println("Right answer: " + rightAnswersKeys + ", user answer: " + userAnswer
-                + ", is right answered? - " + (userAnswer.containsAll(rightAnswersKeys))); // for testing
-        return userAnswer.containsAll(rightAnswersKeys);
+        AnswersImplMultiple rightAnswer = (AnswersImplMultiple) questionsMap
+                .get(questionId).getAnswers();
+
+        Set<Integer> rightAnswersSet = new HashSet<>(rightAnswer.getRightAnswersKeys());
+        Set<Integer> userAnswersSet = new HashSet<>(userAnswerMultipleType.getAnswer());
+
+        System.out.println("Right answer: " + rightAnswersSet + ", user answer: " + userAnswersSet
+                + ", is right answered? - " + rightAnswersSet.equals(userAnswersSet)); // for testing
+
+        return rightAnswersSet.equals(userAnswersSet);
     }
 
-    private boolean checkUserInputType(AnswersImplInput answersImplInput, String userAnswer) {
+    private boolean checkUserInputTypeQuestion(long questionId, UserAnswer userAnswer) {
+
+        UserAnswerInputType userAnswerInputType = (UserAnswerInputType) userAnswer;
+
+        AnswersImplInput answersImplInput = (AnswersImplInput) questionsMap.get(questionId).getAnswers();
 
         String rightAnswer = answersImplInput.getAnswer();
 
-        System.out.println("Right answer: " + rightAnswer + ", user answer: " + userAnswer
-                + ", is right answered? - " + (rightAnswer.equalsIgnoreCase(userAnswer))); // for testing
-        return rightAnswer.equalsIgnoreCase(userAnswer);
+        String userAnswerToCheck = userAnswerInputType.getAnswer().trim();
+
+        System.out.println("Right answer: " + rightAnswer + ", user answer: " + userAnswerToCheck
+                + ", is right answered? - " + (rightAnswer.equalsIgnoreCase(userAnswerToCheck))); // for testing
+
+        return rightAnswer.equalsIgnoreCase(userAnswerToCheck);
+    }
+
+    private long validateQuestionId(long questionId) {
+        if (!questionsMap.containsKey(questionId)) {
+            throw new QuestionNotFoundException("There's no question with id " + questionId + " in current test");
+        }
+        return questionId;
     }
 }

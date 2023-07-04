@@ -26,7 +26,7 @@ public class TestsApiController {
 
     private final AnswersService answersService;
 
-    private final AssignedTestsService assignedTestsService;
+    private final AssignedTestService assignedTestService;
 
     @GetMapping("tests")
     public List<TestDescriptionDTO> getAllTests() {
@@ -41,7 +41,7 @@ public class TestsApiController {
     public List<AssignedTestsDTO> getTestsForUser(@PathVariable long id) {
         log.info("API: requesting list of tests assigned to user with id " + id);
 
-        return assignedTestsService.findAssignedTestsByUserId(id).stream()
+        return assignedTestService.findAssignedTestsByUserId(id).stream()
                 .map(mapper::convertToAssignedTestsDTO)
                 .collect(Collectors.toList());
     }
@@ -64,11 +64,12 @@ public class TestsApiController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("tests/questions/{id}")
-    public ResponseEntity<String> postUserResponseOnTest(@RequestBody UserAnswerDTO[] response,
-                                                         @PathVariable String id) {
+    @PostMapping("tests/questions/{testId}")
+    public ResponseEntity<String> postUserResponseOnTest(@RequestBody UserAnswerDTO request,
+                                                         @PathVariable long testId) {
+        log.info("API: recieved user response on test with id " + testId);
 
-        String checked = checkTestService.checkTest(id, response);
+        String checked = checkTestService.checkTest(testId, request);
 
         return new ResponseEntity<>(checked, HttpStatus.OK);
     }
