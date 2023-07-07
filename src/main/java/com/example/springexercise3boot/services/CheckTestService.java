@@ -20,13 +20,15 @@ public class CheckTestService {
 
     private final AssignedTestService assignedTestService;
 
+    private final TimeService timeService;
+
     Map<Long, Question> questionsMap;
 
     public String checkTest(long testId, UserAnswerDTO dto) {
 
         long userId = dto.getUserId();
 
-        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
+        AssignedTest assignedTest = timeService.getAssignedTest();
 
         Test test = assignedTest.getTest();
 
@@ -64,12 +66,6 @@ public class CheckTestService {
                     break;
             }
         }
-
-
-        // ToDo for statistics
-        assignedTest.setFinished(true);
-        assignedTest.setAttempts(assignedTest.getAttempts() + 1);
-        assignedTestService.update(assignedTest);
 
         return "Тест номер " + testId + " для пользователя с id " + userId + " успешно обработан";
     }

@@ -28,6 +28,8 @@ public class TestsApiController {
 
     private final AssignedTestService assignedTestService;
 
+    private final TimeService timeService;
+
     @GetMapping("tests")
     public List<TestDescriptionDTO> getAllTests() {
         log.info("API: requesting list of all tests");
@@ -55,11 +57,13 @@ public class TestsApiController {
         return mapper.convertToTestWithQuestionsDTO(test);
     }
 
-    @GetMapping("tests/questions/{id}")
-    public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long id) {
-        log.info("API: requesting questions with answers for test with id: " + id);
+    @GetMapping("tests/questions/{testId},{userId}")
+    public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long testId, @PathVariable long userId) {
+        log.info("API: requesting questions with answers for test with id: " + testId);
 
-        return testService.findQuestionsByTestId(id).stream()
+        timeService.startTest(testId, userId);
+
+        return testService.findQuestionsByTestId(testId).stream()
                 .map(a -> mapper.convertToQuestionWithAnswersDTO(a, mapper.convertToAnswersDTO(answersService.getAnswers(a.getId()))))
                 .collect(Collectors.toList());
     }
@@ -71,6 +75,15 @@ public class TestsApiController {
 
         String checked = checkTestService.checkTest(testId, request);
 
+        timeService.endTest();
+
         return new ResponseEntity<>(checked, HttpStatus.OK);
+    }
+
+    @GetMapping("tests/checkTestStatus/{testId},{userId}")
+    public boolean checkTestStatus(@PathVariable long testId, @PathVariable long userId) {
+        log.info("API: checking test status");
+
+        return timeService.checkTestStatus(testId, userId);
     }
 }
