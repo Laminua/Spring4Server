@@ -4,6 +4,7 @@ import com.example.springexercise3boot.models.user.UserProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "assigned_tests")
-public class AssignedTests {
+public class AssignedTest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,7 @@ public class AssignedTests {
 
     private int attempts;
 
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "stats")
+    private Stats stats;
 }

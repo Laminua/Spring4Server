@@ -1,0 +1,1 @@
+alter table assigned_tests add column stats jsonb

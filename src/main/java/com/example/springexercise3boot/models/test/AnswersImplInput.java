@@ -6,15 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import static com.example.springexercise3boot.models.test.Answers.INPUT_TYPE;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName(INPUT_TYPE)
+@JsonTypeName(QuestionType.USER_INPUT_CONST)
 public class AnswersImplInput implements Answers {
 
     private String answer;
 
+    @Override
+    public Map<Integer, String> getAnswers() {
+        return new HashMap<>();
+    }
 }
