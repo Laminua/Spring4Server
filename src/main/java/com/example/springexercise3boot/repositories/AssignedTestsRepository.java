@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface AssignedTestsRepository extends JpaRepository<AssignedTest, Long> {
 
-    @Query("select at from AssignedTest at join fetch at.test where at.user.id = :id")
+    @Query("select at from AssignedTest at join fetch at.test where at.user.id = :id and at.finished = false")
     List<AssignedTest> getAssignedTestsByUserId(long id);
 
     @Query("select at from AssignedTest at join fetch at.test t join fetch t.questions " +
