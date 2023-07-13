@@ -1,5 +1,6 @@
 package com.example.springexercise3boot.services;
 
+import com.example.springexercise3boot.dto.AssignedTestDTO;
 import com.example.springexercise3boot.models.test.AssignedTest;
 import com.example.springexercise3boot.repositories.AssignedTestsRepository;
 import com.example.springexercise3boot.util.AssignedTestsNotFoundException;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,20 +18,13 @@ public class AssignedTestService {
 
     private final AssignedTestsRepository assignedTestsRepository;
 
-    public List<AssignedTest> findAssignedTestsByUserId(long id) {
+    private final MapperService mapper;
 
-        return assignedTestsRepository.getAssignedTestsByUserId(id);
-    }
+    public List<AssignedTestDTO> getAssignedTestDTOListByUserId(long userId) {
 
-    @Transactional
-    public void update(AssignedTest updatedAssignedTest) {
-
-        assignedTestsRepository.save(updatedAssignedTest);
-    }
-
-    public AssignedTest getAssignedTest(long id) {
-
-        return assignedTestsRepository.findAssignedTestById(id).orElseThrow();
+        return assignedTestsRepository.getAssignedTestsByUserId(userId).stream()
+                .map(mapper::convertToAssignedTestsDTO)
+                .collect(Collectors.toList());
     }
 
     public AssignedTest findAssignedTestByTestIdAndUserId(long userId, long testId) {

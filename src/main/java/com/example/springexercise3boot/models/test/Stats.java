@@ -13,6 +13,10 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class Stats {
 
+    LocalTime startTime;
+
+    LocalTime endTime;
+
     int rightAnswersCount;
 
     int gainedScore;

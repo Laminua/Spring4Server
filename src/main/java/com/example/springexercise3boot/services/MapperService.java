@@ -50,8 +50,8 @@ public class MapperService {
         return dto;
     }
 
-    public AssignedTestsDTO convertToAssignedTestsDTO(AssignedTest assignedTest) {
-        AssignedTestsDTO dto = new AssignedTestsDTO();
+    public AssignedTestDTO convertToAssignedTestsDTO(AssignedTest assignedTest) {
+        AssignedTestDTO dto = new AssignedTestDTO();
         dto.setId(assignedTest.getId());
         dto.setTest(assignedTest.getTest());
         dto.setFinished(assignedTest.isFinished());

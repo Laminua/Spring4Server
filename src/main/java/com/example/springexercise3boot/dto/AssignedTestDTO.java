@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AssignedTestsDTO {
+public class AssignedTestDTO {
     private long id;
 
     private Test test;

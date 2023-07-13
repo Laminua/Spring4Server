@@ -3,20 +3,16 @@ package com.example.springexercise3boot.util;
 import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.services.UserProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
+@RequiredArgsConstructor
 public class UserProfileValidator implements Validator {
 
     private final UserProfileService userProfileService;
-
-    @Autowired
-    public UserProfileValidator(UserProfileService userProfileService) {
-        this.userProfileService = userProfileService;
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {

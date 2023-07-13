@@ -1,8 +1,9 @@
 package com.example.springexercise3boot.controllers;
 
 import com.example.springexercise3boot.dto.*;
-import com.example.springexercise3boot.models.test.Test;
-import com.example.springexercise3boot.services.*;
+import com.example.springexercise3boot.services.AssignedTestService;
+import com.example.springexercise3boot.services.CheckTestService;
+import com.example.springexercise3boot.services.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,56 +22,44 @@ public class TestsApiController {
 
     private final CheckTestService checkTestService;
 
-    private final MapperService mapper;
-
-    private final AnswersService answersService;
-
     private final AssignedTestService assignedTestService;
 
     private final TimeService timeService;
 
     @GetMapping("tests")
     public List<TestDescriptionDTO> getAllTests() {
-        log.info("API: requesting list of all tests");
+        log.debug("API: requesting list of all tests");
 
-        return testService.findAll().stream()
-                .map(mapper::convertToTestDescriptionDTO)
-                .collect(Collectors.toList());
+        return testService.getAllTestsAsDTOList();
     }
 
-    @GetMapping("tests/forUser/{id}")
-    public List<AssignedTestsDTO> getTestsForUser(@PathVariable long id) {
-        log.info("API: requesting list of tests assigned to user with id " + id);
+    @GetMapping("tests/forUser/{userId}")
+    public List<AssignedTestDTO> getTestsForUser(@PathVariable long userId) {
+        log.debug("API: requesting list of tests assigned to user with id {}", userId);
 
-        return assignedTestService.findAssignedTestsByUserId(id).stream()
-                .map(mapper::convertToAssignedTestsDTO)
-                .collect(Collectors.toList());
+        return assignedTestService.getAssignedTestDTOListByUserId(userId);
     }
 
-    @GetMapping("tests/{id}")
-    public TestWithQuestionsDTO getTestById(@PathVariable long id) {
-        log.info("API: requesting test with questions by test id " + id);
+    @GetMapping("tests/{testId}")
+    public TestWithQuestionsDTO getTestById(@PathVariable long testId) {
+        log.debug("API: requesting test with questions for test with id {}", testId);
 
-        Test test = testService.findOne(id);
-
-        return mapper.convertToTestWithQuestionsDTO(test);
+        return testService.getTestWithQuestionsDTOByTestId(testId);
     }
 
     @GetMapping("tests/questions/{testId},{userId}")
     public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long testId, @PathVariable long userId) {
-        log.info("API: requesting questions with answers for test with id: " + testId);
+        log.info("API: requesting questions with answers for test with id {}", testId);
 
         timeService.startTest(testId, userId);
 
-        return testService.findQuestionsByTestId(testId).stream()
-                .map(a -> mapper.convertToQuestionWithAnswersDTO(a, mapper.convertToAnswersDTO(answersService.getAnswers(a.getId()))))
-                .collect(Collectors.toList());
+        return testService.getQuestionWithAnswersDTOListByTestId(testId);
     }
 
     @PostMapping("tests/questions/{testId}")
     public ResponseEntity<String> postUserResponseOnTest(@RequestBody UserAnswerDTO request,
                                                          @PathVariable long testId) {
-        log.info("API: recieved user response on test with id " + testId);
+        log.debug("API: received user response on test with id {}", testId);
 
         String checked = checkTestService.checkTest(testId, request);
 
