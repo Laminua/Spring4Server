@@ -2,7 +2,6 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.UserAnswerDTO;
 import com.example.springexercise3boot.models.test.*;
-import com.example.springexercise3boot.repositories.AssignedTestsRepository;
 import com.example.springexercise3boot.util.NoAttemptsLeftException;
 import com.example.springexercise3boot.util.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class CheckTestService {
 
     private final AssignedTestService assignedTestService;
 
-    private final AssignedTestsRepository assignedTestsRepository;
+    private final TimeService timeService;
 
     Map<Long, Question> questionsMap;
 
@@ -29,7 +28,7 @@ public class CheckTestService {
 
         long userId = dto.getUserId();
 
-        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
+        AssignedTest assignedTest = timeService.getAssignedTest();
 
         Test test = assignedTest.getTest();
 
@@ -68,13 +67,7 @@ public class CheckTestService {
             }
         }
 
-
-        // ToDo for statistics
-        assignedTest.setFinished(true);
-        assignedTest.setAttempts(assignedTest.getAttempts() + 1);
-        assignedTestsRepository.save(assignedTest);
-
-        return "Тест с id " + testId + " для пользователя с id " + userId + " успешно обработан";
+        return "Тест номер " + testId + " для пользователя с id " + userId + " успешно обработан";
     }
 
     private boolean checkSingleAnswerTypeQuestion(long questionId,

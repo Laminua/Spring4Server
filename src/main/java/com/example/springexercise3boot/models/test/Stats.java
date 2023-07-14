@@ -20,4 +20,8 @@ public class Stats {
     int rightAnswersCount;
 
     int gainedScore;
+
+    LocalTime startTime;
+
+    LocalTime endTime;
 }

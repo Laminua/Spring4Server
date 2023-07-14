@@ -31,4 +31,7 @@ public class Test {
 
     @Column(name = "max_score")
     private int max_score;
+
+    @Column(name = "time_restriction")
+    private int timeRestriction;
 }
