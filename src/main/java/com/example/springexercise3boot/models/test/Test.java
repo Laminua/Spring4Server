@@ -27,10 +27,10 @@ public class Test {
     private List<Question> questions;
 
     @Column(name = "max_attempts")
-    private int max_attempts;
+    private int maxAttempts;
 
     @Column(name = "max_score")
-    private int max_score;
+    private int maxScore;
 
     @Column(name = "time_restriction")
     private int timeRestriction;

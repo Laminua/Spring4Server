@@ -45,7 +45,7 @@ public class MapperService {
         dto.setId(test.getId());
         dto.setDescription(test.getDescription());
         dto.setQuestions(test.getQuestions());
-        dto.setMax_attempts(test.getMax_attempts());
+        dto.setMax_attempts(test.getMaxAttempts());
 
         return dto;
     }

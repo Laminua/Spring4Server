@@ -4,6 +4,7 @@ import com.example.springexercise3boot.dto.*;
 import com.example.springexercise3boot.services.AssignedTestService;
 import com.example.springexercise3boot.services.CheckTestService;
 import com.example.springexercise3boot.services.TestService;
+import com.example.springexercise3boot.services.TimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,11 +48,11 @@ public class TestsApiController {
         return testService.getTestWithQuestionsDTOByTestId(testId);
     }
 
-    @GetMapping("tests/questions/{testId},{userId}")
-    public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long testId, @PathVariable long userId) {
+    @GetMapping("tests/questions/{userId}/{testId}")
+    public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long userId, @PathVariable long testId) {
         log.info("API: requesting questions with answers for test with id {}", testId);
 
-        timeService.startTest(testId, userId);
+        timeService.startTest(userId, testId);
 
         return testService.getQuestionWithAnswersDTOListByTestId(testId);
     }
@@ -63,15 +64,15 @@ public class TestsApiController {
 
         String checked = checkTestService.checkTest(testId, request);
 
-        timeService.endTest();
+        timeService.endTest(request.getUserId(), testId);
 
         return new ResponseEntity<>(checked, HttpStatus.OK);
     }
 
-    @GetMapping("tests/checkTestStatus/{testId},{userId}")
-    public boolean checkTestStatus(@PathVariable long testId, @PathVariable long userId) {
+    @GetMapping("tests/checkTestStatus/{userId}/{testId}")
+    public boolean checkTestStatus(@PathVariable long userId, @PathVariable long testId) {
         log.info("API: checking test status");
 
-        return timeService.checkTestStatus(testId, userId);
+        return timeService.checkTestStatus(userId, testId);
     }
 }

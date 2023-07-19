@@ -32,4 +32,7 @@ public class AssignedTest {
     @Type(type = "jsonb")
     @Column(columnDefinition = "stats")
     private Stats stats;
+
+    @Column(name = "is_running")
+    private boolean isRunning;
 }
