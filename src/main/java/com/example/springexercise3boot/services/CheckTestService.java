@@ -2,7 +2,6 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.UserAnswerDTO;
 import com.example.springexercise3boot.models.test.*;
-import com.example.springexercise3boot.repositories.AssignedTestsRepository;
 import com.example.springexercise3boot.util.NoAttemptsLeftException;
 import com.example.springexercise3boot.util.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +20,15 @@ public class CheckTestService {
 
     private final AssignedTestService assignedTestService;
 
-    private final AssignedTestsRepository assignedTestsRepository;
-
-    Map<Long, Question> questionsMap;
-
     public String checkTest(long testId, UserAnswerDTO dto) {
 
         long userId = dto.getUserId();
 
-        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
+        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(dto.getUserId(), testId);
 
         Test test = assignedTest.getTest();
 
-        int testMaxAttempts = test.getMax_attempts(); // 0 means unlimited
+        int testMaxAttempts = test.getMaxAttempts(); // 0 means unlimited
 
         int usedAttempts = assignedTest.getAttempts();
 
@@ -41,7 +36,7 @@ public class CheckTestService {
             throw new NoAttemptsLeftException("Исчерпано максимальное количество попыток прохождения теста");
         }
 
-        questionsMap = test.getQuestions().stream()
+        Map<Long, Question> questionsMap = test.getQuestions().stream()
                 .collect(Collectors.toMap(Question::getId, Function.identity()));
 
         List<UserAnswer> userAnswers = dto.getUserAnswers();
@@ -50,34 +45,28 @@ public class CheckTestService {
 
         for (UserAnswer userAnswer : userAnswers) {
 
-            questionId = validateQuestionId(userAnswer.getQuestionId());
+            questionId = validateQuestionId(questionsMap, userAnswer.getQuestionId());
 
             switch (userAnswer.getQuestionType()) {
 
                 case SINGLE_ANSWER:
-                    checkSingleAnswerTypeQuestion(questionId, userAnswer);
+                    checkSingleAnswerTypeQuestion(questionsMap, questionId, userAnswer);
                     break;
 
                 case MANY_ANSWERS:
-                    checkManyAnswersTypeQuestion(questionId, userAnswer);
+                    checkManyAnswersTypeQuestion(questionsMap, questionId, userAnswer);
                     break;
 
                 case USER_INPUT:
-                    checkUserInputTypeQuestion(questionId, userAnswer);
+                    checkUserInputTypeQuestion(questionsMap, questionId, userAnswer);
                     break;
             }
         }
 
-
-        // ToDo for statistics
-        assignedTest.setFinished(true);
-        assignedTest.setAttempts(assignedTest.getAttempts() + 1);
-        assignedTestsRepository.save(assignedTest);
-
-        return "Тест с id " + testId + " для пользователя с id " + userId + " успешно обработан";
+        return "Тест номер " + testId + " для пользователя с id " + userId + " успешно обработан";
     }
 
-    private boolean checkSingleAnswerTypeQuestion(long questionId,
+    private boolean checkSingleAnswerTypeQuestion(Map<Long, Question> questionsMap, long questionId,
                                                   UserAnswer userAnswer) {
 
         UserAnswerSingleType userAnswerSingleType = (UserAnswerSingleType) userAnswer;
@@ -94,7 +83,7 @@ public class CheckTestService {
         return rightAnswerKey == userAnswerToCheck;
     }
 
-    private boolean checkManyAnswersTypeQuestion(long questionId,
+    private boolean checkManyAnswersTypeQuestion(Map<Long, Question> questionsMap, long questionId,
                                                  UserAnswer userAnswer) {
 
         UserAnswerMultipleType userAnswerMultipleType = (UserAnswerMultipleType) userAnswer;
@@ -111,7 +100,7 @@ public class CheckTestService {
         return rightAnswersSet.equals(userAnswersSet);
     }
 
-    private boolean checkUserInputTypeQuestion(long questionId, UserAnswer userAnswer) {
+    private boolean checkUserInputTypeQuestion(Map<Long, Question> questionsMap, long questionId, UserAnswer userAnswer) {
 
         UserAnswerInputType userAnswerInputType = (UserAnswerInputType) userAnswer;
 
@@ -127,7 +116,7 @@ public class CheckTestService {
         return rightAnswer.equalsIgnoreCase(userAnswerToCheck);
     }
 
-    private long validateQuestionId(long questionId) {
+    private long validateQuestionId(Map<Long, Question> questionsMap, long questionId) {
         if (!questionsMap.containsKey(questionId)) {
             throw new QuestionNotFoundException("There's no question with id " + questionId + " in current test");
         }

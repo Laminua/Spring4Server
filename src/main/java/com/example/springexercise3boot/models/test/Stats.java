@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -13,11 +13,13 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class Stats {
 
-    LocalTime startTime;
+    ZonedDateTime startTime;
 
-    LocalTime endTime;
+    ZonedDateTime endTime;
 
     int rightAnswersCount;
 
     int gainedScore;
+
+    TestEndReason endReason;
 }
