@@ -2,7 +2,9 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.models.test.AssignedTest;
 import com.example.springexercise3boot.models.test.Stats;
+import com.example.springexercise3boot.models.test.TestEndReason;
 import com.example.springexercise3boot.repositories.AssignedTestsRepository;
+import com.example.springexercise3boot.util.NoAttemptsLeftException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,10 @@ public class TimeService {
 
         AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
 
+        if (assignedTest.getAttempts() == assignedTest.getTest().getMaxAttempts()) {
+            throw new NoAttemptsLeftException("Исчерпано максимальное количество попыток прохождения теста");
+        }
+
         Stats stats = assignedTest.getStats();
 
         if (stats == null) {
@@ -42,6 +48,8 @@ public class TimeService {
 
         assignedTest.setRunning(false);
         assignedTest.getStats().setEndTime(ZonedDateTime.now());
+        assignedTest.getStats().setEndReason(TestEndReason.BY_USER);
+        assignedTest.setAttempts(assignedTest.getAttempts() + 1);
         assignedTestsRepository.save(assignedTest);
     }
 

@@ -1,6 +1,7 @@
 package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.models.test.AssignedTest;
+import com.example.springexercise3boot.models.test.TestEndReason;
 import com.example.springexercise3boot.repositories.AssignedTestsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +16,7 @@ public class TestScheduler {
 
     private final AssignedTestsRepository assignedTestsRepository;
 
-    @Scheduled(fixedRate = 6000L)
+    @Scheduled(fixedRate = 60000L)
     public void stopTest() {
 
         List<AssignedTest> runningTests = assignedTestsRepository.getRunningAssignedTests();
@@ -28,6 +29,8 @@ public class TestScheduler {
 
             if (ZonedDateTime.now().isAfter(endTime)) {
                 runningTest.getStats().setEndTime(endTime);
+                runningTest.getStats().setEndReason(TestEndReason.BY_SCHEDULER);
+                runningTest.setAttempts(runningTest.getAttempts() + 1);
                 runningTest.setRunning(false);
                 assignedTestsRepository.save(runningTest);
             }

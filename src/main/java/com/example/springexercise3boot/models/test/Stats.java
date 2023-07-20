@@ -20,4 +20,6 @@ public class Stats {
     int rightAnswersCount;
 
     int gainedScore;
+
+    TestEndReason endReason;
 }
