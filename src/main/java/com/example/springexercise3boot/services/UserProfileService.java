@@ -26,14 +26,12 @@ public class UserProfileService {
         return foundUserProfile.orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
     }
 
-    public UserProfile findByUsername(String username) {
-        Optional<UserProfile> foundUserProfile = userProfilesRepository.queryDistinctByUsername(username);
-        return foundUserProfile.orElseThrow(() -> new UserNotFoundException("No user with username " + username));
+    public Optional<UserProfile> findByUsername(String username) {
+        return userProfilesRepository.queryDistinctByUsername(username);
     }
 
-    public UserProfile findByEmail(String email) {
-        Optional<UserProfile> foundUserProfile = userProfilesRepository.queryDistinctByEmail(email);
-        return foundUserProfile.orElse(null);
+    public Optional<UserProfile> findByEmail(String email) {
+        return userProfilesRepository.queryDistinctByEmail(email);
     }
 
     @Transactional

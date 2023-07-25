@@ -41,6 +41,29 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(QuestionNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleQuestionNotFoundException(QuestionNotFoundException ex) {
+        errors = new ArrayList<>();
+        errors.add(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AssignedTestsNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleAssignedTestsNotFoundException(
+            AssignedTestsNotFoundException ex) {
+        errors = new ArrayList<>();
+        errors.add(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoAttemptsLeftException.class)
+    public ResponseEntity<Map<String, List<String>>> handleNoAttemptsLeftException(
+            NoAttemptsLeftException ex) {
+        errors = new ArrayList<>();
+        errors.add(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
     private Map<String, List<String>> getErrorsMap(List<String> errors) {
         Map<String, List<String>> errorResponse = new HashMap<>();
         errorResponse.put("errors", errors);

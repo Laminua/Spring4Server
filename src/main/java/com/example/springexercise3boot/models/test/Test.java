@@ -23,9 +23,12 @@ public class Test {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "test_id")
     private List<Question> questions;
 
     @Column(name = "max_attempts")
-    private int max_attempts;
+    private int maxAttempts;
+
+    @Column(name = "max_score")
+    private int maxScore;
 }

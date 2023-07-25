@@ -3,20 +3,16 @@ package com.example.springexercise3boot.util;
 import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.user.UserProfile;
 import com.example.springexercise3boot.services.UserProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
+@RequiredArgsConstructor
 public class UserProfileValidator implements Validator {
 
     private final UserProfileService userProfileService;
-
-    @Autowired
-    public UserProfileValidator(UserProfileService userProfileService) {
-        this.userProfileService = userProfileService;
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -28,33 +24,33 @@ public class UserProfileValidator implements Validator {
         UserProfileDTO userProfileDTO = (UserProfileDTO) target;
 
         if (userProfileDTO.getId() == 0) {
-            if (userProfileService.findByUsername(userProfileDTO.getUsername()) != null) {
-                errors.rejectValue("username", "400", "Username already exists");
-            }
-
-            if (userProfileService.findByEmail(userProfileDTO.getEmail()) != null) {
-                errors.rejectValue("email", "400", "Email already taken");
-            }
+            validateNewUserProfile(userProfileDTO, errors);
         } else {
-            boolean usernameNeedValidation = false;
-            boolean emailNeedValidation = false;
-            UserProfile userProfile = userProfileService.findOne(userProfileDTO.getId());
+            validateExistingUserProfile(userProfileDTO, errors);
+        }
+    }
 
-            if (!userProfile.getUsername().equals(userProfileDTO.getUsername())) {
-                usernameNeedValidation = true;
-            }
+    private void validateNewUserProfile(UserProfileDTO userProfileDTO, Errors errors) {
+        if (userProfileService.findByUsername(userProfileDTO.getUsername()).isPresent()) {
+            errors.rejectValue("username", "400", "Username already exists");
+        }
 
-            if (!userProfile.getEmail().equals(userProfileDTO.getEmail())) {
-                emailNeedValidation = true;
-            }
+        if (userProfileService.findByEmail(userProfileDTO.getEmail()).isPresent()) {
+            errors.rejectValue("email", "400", "Email already taken");
+        }
+    }
 
-            if (usernameNeedValidation && (userProfileService.findByUsername(userProfileDTO.getUsername()) != null)) {
-                errors.rejectValue("username", "400", "Username already exists");
-            }
+    private void validateExistingUserProfile(UserProfileDTO userProfileDTO, Errors errors) {
+        UserProfile userProfile = userProfileService.findOne(userProfileDTO.getId());
 
-            if (emailNeedValidation && (userProfileService.findByEmail(userProfileDTO.getEmail()) != null)) {
-                errors.rejectValue("email", "400", "Email already taken");
-            }
+        if (!userProfile.getUsername().equals(userProfileDTO.getUsername()) &&
+                userProfileService.findByUsername(userProfileDTO.getUsername()).isPresent()) {
+            errors.rejectValue("username", "400", "Username already exists");
+        }
+
+        if (!userProfile.getEmail().equals(userProfileDTO.getEmail()) &&
+                userProfileService.findByEmail(userProfileDTO.getEmail()).isPresent()) {
+            errors.rejectValue("email", "400", "Email already taken");
         }
     }
 }
