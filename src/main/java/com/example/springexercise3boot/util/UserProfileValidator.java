@@ -31,11 +31,11 @@ public class UserProfileValidator implements Validator {
     }
 
     private void validateNewUserProfile(UserProfileDTO userProfileDTO, Errors errors) {
-        if (userProfileService.findByUsername(userProfileDTO.getUsername()) != null) {
+        if (userProfileService.findByUsername(userProfileDTO.getUsername()).isPresent()) {
             errors.rejectValue("username", "400", "Username already exists");
         }
 
-        if (userProfileService.findByEmail(userProfileDTO.getEmail()) != null) {
+        if (userProfileService.findByEmail(userProfileDTO.getEmail()).isPresent()) {
             errors.rejectValue("email", "400", "Email already taken");
         }
     }
@@ -43,11 +43,13 @@ public class UserProfileValidator implements Validator {
     private void validateExistingUserProfile(UserProfileDTO userProfileDTO, Errors errors) {
         UserProfile userProfile = userProfileService.findOne(userProfileDTO.getId());
 
-        if (!userProfile.getUsername().equals(userProfileDTO.getUsername()) && userProfileService.findByUsername(userProfileDTO.getUsername()) != null) {
+        if (!userProfile.getUsername().equals(userProfileDTO.getUsername()) &&
+                userProfileService.findByUsername(userProfileDTO.getUsername()).isPresent()) {
             errors.rejectValue("username", "400", "Username already exists");
         }
 
-        if (!userProfile.getEmail().equals(userProfileDTO.getEmail()) && userProfileService.findByEmail(userProfileDTO.getEmail()) != null) {
+        if (!userProfile.getEmail().equals(userProfileDTO.getEmail()) &&
+                userProfileService.findByEmail(userProfileDTO.getEmail()).isPresent()) {
             errors.rejectValue("email", "400", "Email already taken");
         }
     }

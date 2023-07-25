@@ -33,11 +33,7 @@ public class CheckTestService {
 
         Test test = assignedTest.getTest();
 
-        int testMaxAttempts = test.getMax_attempts(); // 0 means unlimited
-
-        int usedAttempts = assignedTest.getAttempts();
-
-        if (testMaxAttempts > 0 && testMaxAttempts == usedAttempts) {
+        if (test.getMaxAttempts() > 0 && test.getMaxAttempts() == assignedTest.getAttempts()) {
             throw new NoAttemptsLeftException("Исчерпано максимальное количество попыток прохождения теста");
         }
 
@@ -67,7 +63,6 @@ public class CheckTestService {
                     break;
             }
         }
-
 
         // ToDo for statistics
         assignedTest.setFinished(true);

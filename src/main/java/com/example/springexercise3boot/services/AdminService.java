@@ -2,6 +2,7 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.dto.UserProfileDTO;
 import com.example.springexercise3boot.models.user.UserProfile;
+import com.example.springexercise3boot.util.UserNotFoundException;
 import com.example.springexercise3boot.util.UserProfileValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,8 @@ public class AdminService {
 
     public UserProfileDTO getUserProfileByUsername(String username) {
 
-        UserProfile profile = userProfileService.findByUsername(username);
+        UserProfile profile = userProfileService.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user with username " + username));
 
         return mapper.convertToUserProfileDTO(profile);
     }
