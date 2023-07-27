@@ -4,7 +4,6 @@ import com.example.springexercise3boot.dto.QuestionWithAnswersDTO;
 import com.example.springexercise3boot.dto.TestDescriptionDTO;
 import com.example.springexercise3boot.dto.TestWithQuestionsDTO;
 import com.example.springexercise3boot.models.test.Test;
-import com.example.springexercise3boot.repositories.QuestionsRepository;
 import com.example.springexercise3boot.repositories.TestsRepository;
 import com.example.springexercise3boot.util.TestNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ public class TestService {
 
     private final TestsRepository testsRepository;
 
-    private final QuestionsRepository questionsRepository;
-
     private final MapperService mapper;
+
+    private final TimeService timeService;
 
     public List<TestDescriptionDTO> getAllTestsAsDTOList() {
 
@@ -39,16 +38,19 @@ public class TestService {
         return mapper.convertToTestWithQuestionsDTO(test);
     }
 
-    public List<QuestionWithAnswersDTO> getQuestionWithAnswersDTOListByTestId(long testId) {
-
-        return questionsRepository.findAllByTestId(testId).stream()
-                .map(a -> mapper.convertToQuestionWithAnswersDTO(
-                        a, mapper.convertToAnswersDTO(a.getAnswers())))
-                .collect(Collectors.toList());
-    }
-
     public Test findOne(long testId) {
         Optional<Test> foundTest = testsRepository.findById(testId);
         return foundTest.orElseThrow(() -> new TestNotFoundException("No test found by ID: " + testId));
+    }
+
+    @Transactional
+    public List<QuestionWithAnswersDTO> startTest(long userId, long testId) {
+
+        Test test = timeService.startTest(userId, testId);
+
+        return test.getQuestions().stream()
+                .map(a -> mapper.convertToQuestionWithAnswersDTO(
+                        a, mapper.convertToAnswersDTO(a.getAnswers())))
+                .collect(Collectors.toList());
     }
 }

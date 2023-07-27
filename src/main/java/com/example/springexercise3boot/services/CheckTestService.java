@@ -20,6 +20,8 @@ public class CheckTestService {
 
     private final AssignedTestService assignedTestService;
 
+    private final TimeService timeService;
+
     public String checkTest(long testId, UserAnswerDTO dto) {
 
         long userId = dto.getUserId();
@@ -62,6 +64,7 @@ public class CheckTestService {
                     break;
             }
         }
+        timeService.endTest(assignedTest);
 
         return "Тест номер " + testId + " для пользователя с id " + userId + " успешно обработан";
     }

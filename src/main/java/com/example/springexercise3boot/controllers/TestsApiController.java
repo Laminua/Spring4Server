@@ -50,11 +50,9 @@ public class TestsApiController {
 
     @GetMapping("tests/questions/{userId}/{testId}")
     public List<QuestionWithAnswersDTO> getQuestionsByTestId(@PathVariable long userId, @PathVariable long testId) {
-        log.info("API: requesting questions with answers for test with id {}", testId);
+        log.info("API: starting test with id {} for user with id {}", testId, userId);
 
-        timeService.startTest(userId, testId);
-
-        return testService.getQuestionWithAnswersDTOListByTestId(testId);
+        return testService.startTest(userId, testId);
     }
 
     @PostMapping("tests/questions/{testId}")
@@ -63,8 +61,6 @@ public class TestsApiController {
         log.debug("API: received user response on test with id {}", testId);
 
         String checked = checkTestService.checkTest(testId, request);
-
-        timeService.endTest(request.getUserId(), testId);
 
         return new ResponseEntity<>(checked, HttpStatus.OK);
     }

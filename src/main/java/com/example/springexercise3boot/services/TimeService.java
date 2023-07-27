@@ -2,6 +2,7 @@ package com.example.springexercise3boot.services;
 
 import com.example.springexercise3boot.models.test.AssignedTest;
 import com.example.springexercise3boot.models.test.Stats;
+import com.example.springexercise3boot.models.test.Test;
 import com.example.springexercise3boot.models.test.TestEndReason;
 import com.example.springexercise3boot.repositories.AssignedTestsRepository;
 import com.example.springexercise3boot.util.NoAttemptsLeftException;
@@ -22,7 +23,7 @@ public class TimeService {
 
     private final AssignedTestsRepository assignedTestsRepository;
 
-    public void startTest(long userId, long testId) {
+    public Test startTest(long userId, long testId) {
 
         AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
 
@@ -40,11 +41,11 @@ public class TimeService {
         stats.setStartTime(ZonedDateTime.now());
         assignedTest.setStats(stats);
         assignedTestsRepository.save(assignedTest);
+
+        return assignedTest.getTest();
     }
 
-    public void endTest(long userId, long testId) {
-
-        AssignedTest assignedTest = assignedTestService.findAssignedTestByTestIdAndUserId(userId, testId);
+    public void endTest(AssignedTest assignedTest) {
 
         assignedTest.setRunning(false);
         assignedTest.getStats().setEndTime(ZonedDateTime.now());
